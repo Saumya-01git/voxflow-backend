@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Environment Variables (Page 10, Section 12)
+.env
+.env.local
+.env.*.local
+
+# Temporary Audio Storage
+storage/audio/*.mp3
+storage/audio/*.wav
+!storage/audio/.gitkeep
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS & Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
