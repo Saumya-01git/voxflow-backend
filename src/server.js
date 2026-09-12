@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import healthRoutes from './routes/healthRoutes.js';
+import voiceRoutes from './routes/voiceRoutes.js';
+import ttsRoutes from './routes/ttsRoutes.js';
 import { logger } from './utils/logger.js';
 
 // Load environment variables
@@ -42,6 +44,8 @@ app.use('/audio', express.static(audioStoragePath));
 
 // 5. Route Mounting
 app.use('/api/health', healthRoutes);
+app.use('/api/voices', voiceRoutes);
+app.use('/api/tts', ttsRoutes);
 
 // Root greeting & status endpoint
 app.get('/', (req, res) => {
