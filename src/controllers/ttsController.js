@@ -1,4 +1,5 @@
 import { logger } from '../utils/logger.js';
+import { synthesizeAudio } from '../services/ttsService.js';
 
 /**
  * Controller: Handle Speech Synthesis Request
@@ -9,27 +10,40 @@ export async function synthesize(req, res, next) {
     const text = req.sanitizedText;
     const { language, voice, speed = 1.0, pitch = 0 } = req.body;
 
-    logger.info(`Received TTS synthesis request for [${language}] [${voice}] - Length: ${text.length} chars`);
+    logger.info(`Received TTS synthesis request: [${language}] [${voice}] - Length: ${text.length} chars`);
 
-    const words = text.split(/\s+/).length;
-    const estimatedDuration = Math.max(1, Math.round(words / (2.5 * (speed || 1.0))));
+    // Communicate with the TTS provider (Day 10)
+    const { audioBuffer, format, duration } = await synthesizeAudio({
+      text,
+      language,
+      voice,
+      speed: Number(speed),
+      pitch: Number(pitch)
+    });
 
-    // Return standardized API response contract matching Section 8 of PDF
+    logger.info(`Synthesis successful: Generated ${audioBuffer.length} bytes of ${format} audio (~${duration}s)`);
+
+    // Standardized response acknowledging provider integration
     res.status(200).json({
       success: true,
-      message: 'Speech synthesis request processed successfully.',
+      message: 'Speech successfully synthesized by TTS provider.',
       audioUrl: `/audio/sample_${voice}.mp3`,
+      audioBytes: audioBuffer.length,
+      format,
       text,
       language,
       voice,
       characterCount: text.length,
-      wordCount: words,
-      duration: estimatedDuration,
+      duration,
       speed: Number(speed),
       pitch: Number(pitch),
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    next(error);
+    logger.error('Synthesis controller error:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'TTS synthesis provider failed.'
+    });
   }
 }
