@@ -8,6 +8,8 @@ import { fileURLToPath } from 'url';
 import healthRoutes from './routes/healthRoutes.js';
 import voiceRoutes from './routes/voiceRoutes.js';
 import ttsRoutes from './routes/ttsRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import { logger } from './utils/logger.js';
 
 // Load environment variables
@@ -28,7 +30,7 @@ app.use(helmet({
 // 2. CORS Configuration (Section 15 of PDF)
 app.use(cors({
   origin: [CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
@@ -46,6 +48,8 @@ app.use('/audio', express.static(audioStoragePath));
 app.use('/api/health', healthRoutes);
 app.use('/api/voices', voiceRoutes);
 app.use('/api/tts', ttsRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 
 // Root greeting & status endpoint
 app.get('/', (req, res) => {

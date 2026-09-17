@@ -6,10 +6,11 @@ node_modules/
 .env.local
 .env.*.local
 
-# Temporary Audio Storage
+# Temporary Audio Storage & Local DB
 storage/audio/*.mp3
 storage/audio/*.wav
 !storage/audio/.gitkeep
+storage/*.json
 
 # Logs
 logs/
