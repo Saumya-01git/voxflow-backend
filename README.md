@@ -18,6 +18,19 @@
 
 ---
 
+## 📸 Visual Showcase & App Preview
+
+### 1. Speech Studio — Light Theme (Morning Fairytale)
+![VoxFlow Speech Studio Light Theme](./screenshots/light_mode_studio.png)
+
+### 2. Speech Studio — Dark Theme (Cybernetic Oceanic)
+![VoxFlow Speech Studio Dark Theme](./screenshots/dark_mode_studio.png)
+
+### 3. Fairy Tale Realm & Story Deck (with Translucent Soundwave Art)
+![VoxFlow Fairy Tale Realm Dark Theme](./screenshots/dark_mode_fairytale.png)
+
+---
+
 ## 🏗️ Architecture & Database Design
 
 The backend uses a modular MVC architecture (Routes &rarr; Controllers &rarr; Services &rarr; Database Adapter).
