@@ -79,6 +79,14 @@ export async function readDB() {
       const sql = await ensureNeonTables();
       if (sql) {
         const usersRows = await sql`SELECT id, name, email, password, created_at as "createdAt" FROM users`;
+        const mappedUsers = (usersRows || []).map((u) => ({
+          id: u.id,
+          name: u.name,
+          email: u.email,
+          password: u.password,
+          passwordHash: u.password,
+          createdAt: u.createdAt
+        }));
         const historyRows = await sql`
           SELECT 
             id, 
@@ -97,7 +105,7 @@ export async function readDB() {
           ORDER BY created_at DESC
         `;
         return {
-          users: usersRows || [],
+          users: mappedUsers,
           history: historyRows || []
         };
       }
@@ -108,7 +116,14 @@ export async function readDB() {
 
   try {
     const raw = await fs.promises.readFile(DB_FILE, 'utf8');
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed.users)) {
+      parsed.users = parsed.users.map((u) => ({
+        ...u,
+        passwordHash: u.passwordHash || u.password
+      }));
+    }
+    return parsed;
   } catch {
     return { users: [], history: [] };
   }
@@ -133,9 +148,10 @@ export async function writeDB(data) {
         // Sync Users
         if (Array.isArray(data.users)) {
           for (const user of data.users) {
+            const passHash = user.passwordHash || user.password;
             await sql`
               INSERT INTO users (id, name, email, password, created_at)
-              VALUES (${user.id}, ${user.name}, ${user.email}, ${user.password}, ${user.createdAt || new Date().toISOString()})
+              VALUES (${user.id}, ${user.name}, ${user.email}, ${passHash}, ${user.createdAt || new Date().toISOString()})
               ON CONFLICT (id) DO UPDATE 
               SET password = EXCLUDED.password, name = EXCLUDED.name;
             `;
