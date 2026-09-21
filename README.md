@@ -118,20 +118,5 @@ npm run dev
 
 ---
 
-## 📅 14-Day Structured Development Roadmap
-
-| Day | Milestone Focus | Status |
-|:---:|---|:---:|
-| **Day 1** | Requirement analysis, system architecture design, and API contracts | ✅ Completed |
-| **Day 8** | Initialize Express backend project with modular MVC structure & configs | ✅ Completed |
-| **Day 9** | Create `/api/tts` and `/api/voices` routes with validation middleware | ✅ Completed |
-| **Day 10** | Integrate multi-language neural voice synthesis engines | ✅ Completed |
-| **Day 11** | Audio generation pipeline, disk caching, and static streaming delivery | ✅ Completed |
-| **Day 12** | Interactive player support, playback speed, and waveform telemetry | ✅ Completed |
-| **Day 13** | MP3 delivery, speech history endpoints, and favorite bookmarking | ✅ Completed |
-| **Day 14** | Neon PostgreSQL database, in-app password update, CORS hardening & Render deployment | ✅ Completed |
-
----
-
 ## 📄 License
 This project is licensed under the MIT License.
