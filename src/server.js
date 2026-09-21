@@ -27,10 +27,34 @@ app.use(helmet({
   crossOriginResourcePolicy: false // Allow audio files to be loaded by frontend
 }));
 
-// 2. CORS Configuration (Section 15 of PDF)
+// 2. CORS Configuration (Supports local, custom CLIENT_URL, Vercel, Netlify, Render)
+const configuredOrigins = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+const defaultOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:3000',
+  'http://localhost:4173'
+];
+
 app.use(cors({
-  origin: [CLIENT_URL, 'http://localhost:5173', 'http://127.0.0.1:5173'],
-  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (configuredOrigins.includes(origin) || configuredOrigins.includes('*')) {
+      return callback(null, true);
+    }
+    if (defaultOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    if (/^https:\/\/.*\.vercel\.app$/.test(origin) || /^https:\/\/.*\.netlify\.app$/.test(origin) || /^https:\/\/.*\.onrender\.com$/.test(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
